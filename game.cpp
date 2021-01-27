@@ -261,12 +261,13 @@ int main(){
   
     //////////////////////////////////////river finish/////////////////////////////////////////////////////////////////////////
     while (window.isOpen())
-    {
+    {   
+                                //event handling//
         sf::Event event;
 
         while(window.pollEvent( event ))
         {
-            //event handling
+            
             switch(event.type)
             {
                 case sf::Event::Closed:
