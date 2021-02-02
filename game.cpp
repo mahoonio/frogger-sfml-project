@@ -5,13 +5,78 @@
 
 int main(){
     sf::RenderWindow window(sf::VideoMode(840,640), "frog-FunGame");
+    //window.setVerticalSyncEnabled(true);
+
+    sf::RectangleShape background(sf::Vector2f(840.0f , 640.0f));
+    sf::Texture backphoto;
+    if(!(backphoto.loadFromFile("res/img/home.jpeg")))
+    {
+        std::cout<<"error loading file"<<std::endl;
+    }
+    background.setTexture(&backphoto);
+
+    int life = 3;
+
+    sf::Music crash;
+    sf::Music move;
+    sf::Music win;
+    sf::Music gameover;
+    sf::Music fallwater;
+    sf::Font font;
+    sf::Text lose;
+    sf::Text info;
+    
+
+    if(!(font.loadFromFile("res/font/plasticfont.ttf"))){
+        std::cout<<"error loading font"<<std::endl;
+    }
+    
+    lose.setFont(font);
+    //lose.Underlined=4;
+    lose.setString("GAME OVER!!!");
+    lose.setFillColor(sf::Color::Red);
+    lose.setCharacterSize(100);
+    lose.setPosition(sf::Vector2f(window.getSize().x/4-120,window.getSize().y/2-80));
+
+    info.setFont(font);
+    info.setString(" DIRECTED BY : \n ERFAN ZARE AND MAHAN MAHMOODI \n IUST\n PROFESSOR : MALEKI MAJD");
+    info.setPosition(sf::Vector2f(40.0f, window.getSize().y/2 + 80));
+    
+
+    
+    
+    
+    /////////////////////////////////sound effects////////////////////////////////////////////////////
+    if(!(crash.openFromFile("res/audio/crash.ogg")))
+    {
+        std::cout<< "error-loading-crash-sound"<<std::endl;
+    }
+    if(!(move.openFromFile("res/audio/move.ogg")))
+    {
+        std::cout<< "error-loading-move-sound"<<std::endl;
+    }
+    if(!(win.openFromFile("res/audio/win.ogg")))
+    {
+        std::cout<< "error-loading-win-sound"<<std::endl;
+    }
+     if(!(gameover.openFromFile("res/audio/gameover.ogg")))
+    {
+        std::cout<< "error-loading-gameover-sound"<<std::endl;
+    }
+     if(!(fallwater.openFromFile("res/audio/fallwater.ogg")))
+    {
+        std::cout<< "error-loading-fallwater-sound"<<std::endl;
+    }
+
 
     sf::Music asli;
     if(!asli.openFromFile( "res/audio/Crazy-Frog-Axel-f.ogg" ))
     {
         std::cout<< "error" <<std::endl;
     }
+    asli.setVolume(50);
     asli.play();
+    
     //frog arrangment
     sf::RectangleShape frog(sf::Vector2f(40.0f,40.0f));
     sf::Rect<float> frogsize = frog.getGlobalBounds();
@@ -261,13 +326,14 @@ int main(){
   
     //////////////////////////////////////river finish/////////////////////////////////////////////////////////////////////////
     while (window.isOpen())
-    {   
-                                //event handling//
+    {
         sf::Event event;
+         //window.draw(background);
+         //window.display();
 
         while(window.pollEvent( event ))
         {
-            
+            //event handling
             switch(event.type)
             {
                 case sf::Event::Closed:
@@ -285,21 +351,25 @@ int main(){
             {
                 frog.move(sf::Vector2f(-40.0f,0.0f));
                 frog.setRotation(-90);
+                move.play();
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
             {
                 frog.move(sf::Vector2f(40.0f,0.0f));
                 frog.setRotation(90);
+                move.play();
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
             {
                 frog.move(sf::Vector2f(0.0f,-40.0f));
                 frog.setRotation(0);
+                move.play();
             }
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
             {
                 frog.move(sf::Vector2f(0.0f,40.f));
                 frog.setRotation(180);
+                move.play();
             }
             if ((frog.getPosition().x>window.getSize().x) ||(frog.getPosition().x <0)) 
             {
@@ -310,8 +380,13 @@ int main(){
                 window.close();
             }
 
+           
+
         }
-            
+
+    
+       
+
             // game update (occurs every frame)
             truck1.move(0.15,0);
             if(truck1.getPosition().x > window.getSize().x)
@@ -320,7 +395,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck1.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             car1.move(-0.2,0);
@@ -330,7 +407,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car1.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             truck2.move(0.18,0);
@@ -340,7 +419,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck2.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             truck3.move(0.13,0);
@@ -350,7 +431,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck3.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             car2.move(-0.25,0);
@@ -360,7 +443,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car2.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             truck11.move(0.15,0);
@@ -370,7 +455,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck11.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
             
             truck21.move(0.18,0);
@@ -380,7 +467,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck21.getGlobalBounds()))
             {
-                window.close();
+               frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+               life--;
+                crash.play();
             }
             
             truck31.move(0.13,0);
@@ -390,7 +479,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck31.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
             
             car11.move(-0.2,0);
@@ -400,7 +491,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car11.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
             
             car21.move(-0.25,0);
@@ -410,7 +503,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car21.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
 
@@ -423,7 +518,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck12.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             car12.move(-0.2,0);
@@ -433,7 +530,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car12.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             truck22.move(0.18,0);
@@ -443,7 +542,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck22.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             truck32.move(0.13,0);
@@ -453,7 +554,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck32.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             car22.move(-0.25,0);
@@ -463,7 +566,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car22.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
 
@@ -474,7 +579,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck13.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             car13.move(-0.2,0);
@@ -484,7 +591,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car13.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             truck23.move(0.18,0);
@@ -494,7 +603,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck23.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
 
             truck33.move(0.13,0);
@@ -504,7 +615,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(truck33.getGlobalBounds()))
             {
-                window.close();
+               frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+               life--;
+                crash.play();
             }
 
             car23.move(-0.25,0);
@@ -514,7 +627,9 @@ int main(){
             }
             if(frog.getGlobalBounds().intersects(car23.getGlobalBounds()))
             {
-                window.close();
+                frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                life--;
+                crash.play();
             }
             ////////////////////////////////////////river movement start////////////////////////////////////////////
             trunk0b.move(0.17,0);
@@ -719,6 +834,7 @@ int main(){
             if(t7.getGlobalBounds().intersects(frog.getGlobalBounds()))
             {
                 frog.move(0.19,0);
+                
             }
 
              t8.move(0.19,0);
@@ -741,7 +857,7 @@ int main(){
                 frog.move(0.19,0);
             }
 
-            if (frog.getPosition().y>=120 && frog.getPosition().y<=280)
+            if (frog.getPosition().y>=120 && frog.getPosition().y<=320)
             {
                if(!(frog.getGlobalBounds().intersects(trunk0b.getGlobalBounds())|| frog.getGlobalBounds().intersects(trunk0m.getGlobalBounds())|| 
                frog.getGlobalBounds().intersects(trunk01s.getGlobalBounds())|| frog.getGlobalBounds().intersects(trunk1b.getGlobalBounds())|| 
@@ -756,9 +872,14 @@ int main(){
                frog.getGlobalBounds().intersects(t6.getGlobalBounds())|| frog.getGlobalBounds().intersects(t7.getGlobalBounds())|| 
                frog.getGlobalBounds().intersects(t8.getGlobalBounds())|| frog.getGlobalBounds().intersects(t9.getGlobalBounds())))
                {
-                   window.close();
+                  frog.setPosition(sf::Vector2f(window.getSize().x/2,window.getSize().y-frogsize.height/2));
+                  life--;
+                  fallwater.play();
                } 
             }
+
+    
+
             
 
             ////////////////////////////////////////river movement finish///////////////////////////////////////////
@@ -766,6 +887,7 @@ int main(){
 
             window.clear();
             // object drawing
+            window.draw(background);
             window.draw(truck1);
             window.draw(car1);
             window.draw(truck2);
@@ -808,12 +930,22 @@ int main(){
             window.draw(t8);
             window.draw(t9);
 
+            if(life<0)
+            {   
+                asli.stop();
+                gameover.play();
+                window.clear();
+                window.draw(lose);
+                window.draw(info);
+                
+                
+            }       
 
             
 
 
               
-
+            
 
 
 
